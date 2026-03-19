@@ -77,14 +77,34 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
         S/=2**(4-T1_StReg)
         return S
 
-def f(x):
+#计算总伤：用二分法解HP=Bellone3_Total_Damage(...,HP,...)这个方程。
+#函数连续性不好不能迭代、容易进入循环，但是大体上是单调的，所以零点应该只有一个。可以通过matplotlib画图验证
+#所以需要提前找好对应的两个端点，这个就需要自己估摸一下搞一搞了；以下给出了四个常用的配置，对应满潜/无潜+满模组/无模组，对应的端点在最后。
+
+def f1(x):
     return Bellone3_Total_Damage(2,90,3,6,x,0,0,0)
 
-l=220000
-r=230000
-for i in range(50):
-    m=(l+r)/2
-    if f(m)>m:
-        l=m
-    else:
-        r=m
+def f2(x):
+    return Bellone3_Total_Damage(2,90,0,6,x,0,0,0)
+
+def f3(x):
+    return Bellone3_Total_Damage(2,90,3,1,x,0,0,0)
+
+def f4(x):
+    return Bellone3_Total_Damage(2,90,0,1,x,0,0,0)
+
+def Bisect(l,r,f): #l输入左端点，r输入右端点，f输入函数
+    for i in range(50):
+        m=(l+r)/2
+        if (f(m)-m)*(f(l)-l)>0:
+            l=m
+        elif (f(m)-m)*(f(l)-l)<0:
+            r=m
+        else:
+            return m
+    return m
+
+print(Bisect(220000,230000,f1))
+print(Bisect(170000,180000,f2))
+print(Bisect(210000,220000,f3))
+print(Bisect(160000,170000,f4))
