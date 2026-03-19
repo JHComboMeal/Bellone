@@ -70,9 +70,9 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
             Stage23Exp=0 #将每一种过阈值情况对应的伤害按概率加权加进期望伤害里
             for i in Crit_Situ:
                 #Prob+=math.comb(i[0]-i[2],i[1]-i[2])/2**i[0]
-                Stage23Exp+=(math.comb(i[0]-i[2],i[1]-i[2])/2**i[0])*((SubExp+THR/Bonus_Damage)*r_crit**i[1]*r_ncrit**(i[0]-i[1])-THR/Bonus_Damage) #概率*进阈值之前的伤害
-                Stage23Exp+=(math.comb(i[0]-i[2],i[1]-i[2])/2**i[0])*((51+(Mod>0)*4+T1_StReg-i[0])*FullT1_exp) #概率*进阈值之后的（期望）伤害
-            SubExp=Stage23Exp
+                Stage23Exp+=(SubExp+THR/Bonus_Damage)*r_crit**i[1]*r_ncrit**(i[0]-i[1])-THR/Bonus_Damage #进阈值之前的伤害
+                Stage23Exp+=(51+(Mod>0)*4+T1_StReg-i[0])*FullT1_exp #进阈值之后的（期望）伤害
+            SubExp=Stage23Exp*(math.comb(i[0]-i[2],i[1]-i[2])/2**i[0])
             S+=SubExp
         S/=2**(4-T1_StReg)
         return S
