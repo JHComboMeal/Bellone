@@ -39,28 +39,28 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
     else:
         atk=(550+round((Lv-1)*115/89))+(Mod>0)*(Mod*15+35)+(Pt>3)*24 #攻击力
         Ign_Df=0.07+(Mod==3)*0.01 #降低防御
-        Damage_Inc=0.28+(Mod>1)*0.14+(Pt>4)*0.08 #残血增伤
+        Bonus_Damage=0.28+(Mod>1)*0.14+(Pt>4)*0.08 #残血增伤；之前是Damage_Inc，后来看到Arknights Wiki上写的Bonus Damage就改过来了，希望我全改了
         
         Db_atk=atk*2.7 #技能期面板攻击
         St_crit=max(Db_atk*1.85-Df*(1-Ign_Df*5),Db_atk*1.85*0.05) #标准暴击伤害
         St_ncrit=max(Db_atk-Df*(1-Ign_Df*5),Db_atk*0.05) #标准非暴击伤害
         FullT1_exp=St_crit*1.5*0.5+St_ncrit*1.5*0.5 #叠满第一天赋增伤后每hit期望伤害
         THR=0.8*HP #残血阈值
-        r_crit=1+St_crit*Damage_Inc/THR #暴击公比
-        r_ncrit=1+St_ncrit*Damage_Inc/THR #非暴击公比
+        r_crit=1+St_crit*Bonus_Damage/THR #暴击公比
+        r_ncrit=1+St_ncrit*Bonus_Damage/THR #非暴击公比
         T1_StReg=min(T1_Stack,4) #标准化第一天赋叠的额外层数至4
 
         S=0
 
         def count_crit(x,S0):
-            return max(math.ceil(math.log((THR+THR/Damage_Inc)/((S0+THR/Damage_Inc)*r_ncrit**x),r_crit/r_ncrit)),0) #在受到S0的伤害之后，如果要在x次攻击后过阈值，则至少要暴击多少次
+            return max(math.ceil(math.log((THR+THR/Bonus_Damage)/((S0+THR/Bonus_Damage)*r_ncrit**x),r_crit/r_ncrit)),0) #在受到S0的伤害之后，如果要在x次攻击后过阈值，则至少要暴击多少次
         
         for n in range(2**(4-T1_StReg)):
             SubExp=hp_sk #子情况下期望伤害记录
             for i in range(4-T1_StReg): 
-                SubExp+=(Db_atk*(1+int((bin(n)[2:].zfill(4-T1_StReg))[i])*0.85)-Df*(1-(i+1+T1_StReg)*Ign_Df))*(1+Damage_Inc*SubExp/THR) #叠满减防之前的伤害
-            n_min=math.ceil(math.log((THR+THR/Damage_Inc)/(SubExp+THR/Damage_Inc),r_crit)) #至少多少hit过阈值=刚好过阈值时至多暴击多少次
-            n_max=math.ceil(math.log((THR+THR/Damage_Inc)/(SubExp+THR/Damage_Inc),r_ncrit)) #至多多少hit过阈值
+                SubExp+=max((Db_atk*(1+int((bin(n)[2:].zfill(4-T1_StReg))[i])*0.85)-Df*(1-(i+1+T1_StReg)*Ign_Df)),(Db_atk*(1+int((bin(n)[2:].zfill(4-T1_StReg))[i])*0.85)*0.05)*(1+Bonus_Damage*min(SubExp/THR,1)) #叠满减防之前的伤害
+            n_min=math.ceil(math.log((THR+THR/Bonus_Damage)/(SubExp+THR/Bonus_Damage),r_crit)) #至少多少hit过阈值=刚好过阈值时至多暴击多少次
+            n_max=math.ceil(math.log((THR+THR/Bonus_Damage)/(SubExp+THR/Bonus_Damage),r_ncrit)) #至多多少hit过阈值
             Crit_Situ=[] #统计所有的过阈值暴击情况；0/1代表最后一hit是否必须暴击
             for i in range(n_min,min(51+(Mod>0)*4+T1_StReg,n_max)+1):
                 for j in range((count_crit(i,SubExp))*(i!=51+(Mod>0)*4+T1_StReg),min(count_crit(i-1,SubExp),i)+1):
@@ -70,7 +70,7 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
             Stage23Exp=0 #将每一种过阈值情况对应的伤害按概率加权加进期望伤害里
             for i in Crit_Situ:
                 #Prob+=math.comb(i[0]-i[2],i[1]-i[2])/2**i[0]
-                Stage23Exp+=(math.comb(i[0]-i[2],i[1]-i[2])/2**i[0])*((SubExp+THR/Damage_Inc)*r_crit**i[1]*r_ncrit**(i[0]-i[1])-THR/Damage_Inc) #概率*进阈值之前的伤害
+                Stage23Exp+=(math.comb(i[0]-i[2],i[1]-i[2])/2**i[0])*((SubExp+THR/Bonus_Damage)*r_crit**i[1]*r_ncrit**(i[0]-i[1])-THR/Bonus_Damage) #概率*进阈值之前的伤害
                 Stage23Exp+=(math.comb(i[0]-i[2],i[1]-i[2])/2**i[0])*((51+(Mod>0)*4+T1_StReg-i[0])*FullT1_exp) #概率*进阈值之后的（期望）伤害
             SubExp=Stage23Exp
             S+=SubExp
@@ -93,16 +93,16 @@ def f3(x):
 def f4(x):
     return Bellone3_Total_Damage(2,90,0,1,x,0,0,0)
 
-def Bisect(l,r,f): #l输入左端点，r输入右端点，f输入函数
+def Bisect(left,right,funct_for_att): #二分法；left左端点，right右端点，funct_for_att对应配置的函数
     for i in range(50):
-        m=(l+r)/2
-        if (f(m)-m)*(f(l)-l)>0:
-            l=m
-        elif (f(m)-m)*(f(l)-l)<0:
-            r=m
+        mid=(left+right)/2
+        if (funct_for_att(mid)-mid)*(funct_for_att(left)-left)>0:
+            left=mid
+        elif (funct_for_att(mid)-mid)*(funct_for_att(left)-left)<0:
+            right=mid
         else:
-            return m
-    return m
+            return mid
+    return mid
 
 print(Bisect(220000,230000,f1))
 print(Bisect(170000,180000,f2))
