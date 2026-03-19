@@ -14,7 +14,10 @@ def is_int_or_int_str(x):
     return False
 
 def Bellone2_Total_Damage(Elite, Lv, Mod, Pt):
-    #Elite精英化等级，Lv等级，Mod模组等级，Pt潜能1-6，HP最大血量，Df防御（计入所有除了贝洛内自身第一天赋的buff……应该没有和贝洛内加算的buff吧），hp_sk技能开启时已造成的伤害，T1_Stack技能开启时目标身上第一天赋的叠层
+    #Elite精英化等级1，2
+    #Lv等级1-90
+    #Mod模组等级0-3
+    #Pt潜能1-6
     if Elite==0:
         return 'Not applicable for E0.' #不适用于无精
     elif Elite>2 or (not is_int_or_int_str(Elite)):
