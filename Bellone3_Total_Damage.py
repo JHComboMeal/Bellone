@@ -32,9 +32,9 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
         return 'Error in entry Lv. Enter an integer in range [1,90].'
     elif Mod<0 or Mod>3 or (not is_int_or_int_str(Mod)):
         return 'Error in entry Mod. Enter an integer in range [0,3].'
-    elif Pt<1 or Pt>6 (not is_int_or_int_str(Pt)):
+    elif Pt<1 or Pt>6 or (not is_int_or_int_str(Pt)):
         return 'Error in entry Pt. Enter an integer in range [1,6].'
-    elif T1_Stack<0 or (not is_int_or_int_str(Pt)):
+    elif T1_Stack<0 or (not is_int_or_int_str(T1_Stack)):
         return 'Error in entry T1_Stack. Enter a non-negative integer.'
     else:
         atk=(550+round((Lv-1)*115/89))+(Mod>0)*(Mod*15+35)+(Pt>3)*24 #攻击力
