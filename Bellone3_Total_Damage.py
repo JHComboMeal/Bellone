@@ -44,7 +44,7 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
         Db_atk=atk*2.7 #技能期面板攻击
         St_crit=max(Db_atk*1.85-Df*(1-Ign_Df*5),Db_atk*1.85*0.05) #标准暴击伤害
         St_ncrit=max(Db_atk-Df*(1-Ign_Df*5),Db_atk*0.05) #标准非暴击伤害
-        FullT1_exp=St_crit*1.5*0.5+St_ncrit*1.5*0.5 #叠满第一天赋增伤后每hit期望伤害
+        FullT1_exp=St_crit*(1+Bonus_Damage)*0.5+St_ncrit*(1+Bonus_Damage)*0.5 #叠满第一天赋增伤后每hit期望伤害
         THR=0.8*HP #残血阈值
         r_crit=1+St_crit*Bonus_Damage/THR #暴击公比
         r_ncrit=1+St_ncrit*Bonus_Damage/THR #非暴击公比
