@@ -58,7 +58,7 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
         for n in range(2**(4-T1_StReg)):
             SubExp=hp_sk #子情况下期望伤害记录
             for i in range(4-T1_StReg): 
-                SubExp+=max((Db_atk*(1+int((bin(n)[2:].zfill(4-T1_StReg))[i])*0.85)-Df*(1-(i+1+T1_StReg)*Ign_Df)),(Db_atk*(1+int((bin(n)[2:].zfill(4-T1_StReg))[i])*0.85)*0.05)*(1+Bonus_Damage*min(SubExp/THR,1)) #叠满减防之前的伤害
+                SubExp+=max((Db_atk*(1+int((bin(n)[2:].zfill(4-T1_StReg))[i])*0.85)-Df*(1-(i+1+T1_StReg)*Ign_Df)),(Db_atk*(1+int((bin(n)[2:].zfill(4-T1_StReg))[i])*0.85)*0.05)*(1+Bonus_Damage*min(SubExp/THR,1))) #叠满减防之前的伤害
             n_min=math.ceil(math.log((THR+THR/Bonus_Damage)/(SubExp+THR/Bonus_Damage),r_crit)) #至少多少hit过阈值=刚好过阈值时至多暴击多少次
             n_max=math.ceil(math.log((THR+THR/Bonus_Damage)/(SubExp+THR/Bonus_Damage),r_ncrit)) #至多多少hit过阈值
             Crit_Situ=[] #统计所有的过阈值暴击情况；0/1代表最后一hit是否必须暴击
