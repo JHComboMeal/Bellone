@@ -40,6 +40,7 @@ def Bellone3_Total_Damage(Elite, Lv, Mod, Pt, HP, Df, hp_sk, T1_Stack):
         atk=(550+round((Lv-1)*115/89))+(Mod>0)*(Mod*15+35)+(Pt>3)*24 #攻击力
         Ign_Df=0.07+(Mod==3)*0.01 #降低防御
         Bonus_Damage=0.28+(Mod>1)*0.14+(Pt>4)*0.08 #残血增伤；之前是Damage_Inc，后来看到Arknights Wiki上写的Bonus Damage就改过来了，希望我全改了
+        Total_Hits=55+(Mod>0)*4
         
         Db_atk=atk*2.7 #技能期面板攻击
         St_crit=max(Db_atk*1.85-Df*(1-Ign_Df*5),Db_atk*1.85*0.05) #标准暴击伤害
