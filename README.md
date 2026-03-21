@@ -10,6 +10,6 @@ We notice that when the reduction in def in T1 is stacked to max and the enemy's
 Then everything collasped into solving a recursive formula for damage dealt before the enemy's HP drops below 20%, and separating each case of number of critical hits and total hits.
 For the first at-most-4 hits when the reduction in def is still stacking, we basically separate each of the at-most-16 cases out and calculate the expectation in each case.
 
-##Todo
+## Todo
 Bellone S2: Add enemy conditions
 Bellone S3: Calculate prob of killing enemy; Calculate expected number of hits of killing enemy
