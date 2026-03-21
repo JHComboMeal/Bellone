@@ -11,5 +11,5 @@ Then everything collasped into solving a recursive formula for damage dealt befo
 For the first at-most-4 hits when the reduction in def is still stacking, we basically separate each of the at-most-16 cases out and calculate the expectation in each case.
 
 ## Todo
-Bellone S2: Add enemy conditions
-Bellone S3: Calculate prob of killing enemy; Calculate expected number of hits of killing enemy
+Bellone S2: Add enemy conditions.
+Bellone S3: Calculate prob of killing enemy; Calculate expected number of hits of killing enemy.
